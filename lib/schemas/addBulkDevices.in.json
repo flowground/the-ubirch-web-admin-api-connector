@@ -1,0 +1,38 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "hwDeviceId": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "deviceType": {
+                        "type": "string"
+                    },
+                    "listGroups": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "hwDeviceId",
+                    "description",
+                    "deviceType",
+                    "listGroups"
+                ]
+            }
+        }
+    }
+}

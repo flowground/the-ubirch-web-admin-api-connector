@@ -1,0 +1,1649 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "The Ubirch web admin API",
+        "version": "0.1.0",
+        "description": "Docs for the Ubirch web admin API",
+        "termsOfService": "https://ubirch.de",
+        "contact": {
+            "name": "responsibleperson@ubirch.com"
+        },
+        "license": {
+            "name": "Apache V2",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        }
+    },
+    "paths": {
+        "/checks/check": {
+            "get": {
+                "operationId": "check",
+                "summary": "Simple check.",
+                "description": "Simple check to see if the service is up",
+                "tags": [
+                    "Check"
+                ],
+                "deprecated": false,
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/": {
+            "get": {
+                "operationId": "Authenticate",
+                "summary": "Authenticate",
+                "description": "Authenticate a device against Ubirch device management system. Returns a token if valid, HTTP error code 401 if not",
+                "tags": [
+                    "Auth"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "X-Ubirch-Hardware-Id",
+                        "description": "HardwareId of the device",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Ubirch-Credential",
+                        "description": "Password of the device, base64 encoded",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authorization failed"
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http:/ubirch-web-ui/api/v1"
+                    },
+                    {
+                        "url": "https:/ubirch-web-ui/api/v1"
+                    }
+                ]
+            }
+        },
+        "/auth/deviceInfo": {
+            "get": {
+                "operationId": "getDeviceInfo",
+                "summary": "Get the info of a device",
+                "description": "Get general information about a device.",
+                "tags": [
+                    "Auth"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the device. The token can be obtained from the /auth endpoint. Should follow the syntax \"bearer TOKEN",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "deviceType": {
+                                            "type": "string"
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "name"
+                                                ]
+                                            }
+                                        },
+                                        "attributes": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "customerId": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "owner": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "lastname": {
+                                                    "type": "string"
+                                                },
+                                                "firstname": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "username",
+                                                "lastname",
+                                                "firstname"
+                                            ]
+                                        },
+                                        "created": {
+                                            "type": "string"
+                                        },
+                                        "hwDeviceId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "hwDeviceId",
+                                        "description",
+                                        "owner",
+                                        "groups",
+                                        "attributes",
+                                        "deviceType",
+                                        "created",
+                                        "customerId"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http:/ubirch-web-ui/api/v1"
+                    }
+                ]
+            }
+        },
+        "/devices/": {
+            "post": {
+                "operationId": "addBulkDevices",
+                "summary": "Add multiple devices.",
+                "description": "Add multiple devices.",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "hwDeviceId": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "deviceType": {
+                                            "type": "string"
+                                        },
+                                        "listGroups": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "hwDeviceId",
+                                        "description",
+                                        "deviceType",
+                                        "listGroups"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "description": "List of device representation to add [{hwDeviceId: String, description: String, deviceType: String, listGroups: List[String]}].",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/page/{page}/size/{size}": {
+            "get": {
+                "operationId": "getAllDevicesFromUser",
+                "summary": "List all the devices of one user",
+                "description": "For the moment does not support pagination",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "description": "Number of the page requested (starts at 0)",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "description": "Number of devices to be contained in a page",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "hwDeviceId": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "deviceType": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "hwDeviceId",
+                                            "description",
+                                            "deviceType"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/search/{search}": {
+            "get": {
+                "operationId": "searchForDevices",
+                "summary": "Search for devices matching a specific attribute",
+                "description": "Search for devices matching a specific attribute: description, hwDeviceId, ...",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "description": "String that will be used for the search",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "deviceType": {
+                                                "type": "string"
+                                            },
+                                            "groups": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "name"
+                                                    ]
+                                                }
+                                            },
+                                            "attributes": {
+                                                "type": "object",
+                                                "additionalProperties": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "customerId": {
+                                                "type": "string"
+                                            },
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "owner": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "username": {
+                                                        "type": "string"
+                                                    },
+                                                    "lastname": {
+                                                        "type": "string"
+                                                    },
+                                                    "firstname": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "username",
+                                                    "lastname",
+                                                    "firstname"
+                                                ]
+                                            },
+                                            "created": {
+                                                "type": "string"
+                                            },
+                                            "hwDeviceId": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "hwDeviceId",
+                                            "description",
+                                            "owner",
+                                            "groups",
+                                            "attributes",
+                                            "deviceType",
+                                            "created",
+                                            "customerId"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http:/ubirch-web-ui/api/v1"
+                    }
+                ]
+            }
+        },
+        "/devices/state/{from}/{to}": {
+            "post": {
+                "operationId": "getBulkUppsOfDevice",
+                "summary": "Number of UPPs that the specified devices created during the specified timeframe",
+                "description": "Number of UPPs that the specified devices created during the specified timeframe",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "description": "Date in Joda time",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "description": "Date in Joda time",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "description": "List of hwDeviceIds, comma separated",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{id}": {
+            "get": {
+                "operationId": "getOneDevice",
+                "summary": "Get one device",
+                "description": "Get one device belonging to a user from his hwDeviceId",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "hwDeviceId of the device",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "deviceType": {
+                                            "type": "string"
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "id",
+                                                    "name"
+                                                ]
+                                            }
+                                        },
+                                        "attributes": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "customerId": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "owner": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "lastname": {
+                                                    "type": "string"
+                                                },
+                                                "firstname": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "username",
+                                                "lastname",
+                                                "firstname"
+                                            ]
+                                        },
+                                        "created": {
+                                            "type": "string"
+                                        },
+                                        "hwDeviceId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "hwDeviceId",
+                                        "description",
+                                        "owner",
+                                        "groups",
+                                        "attributes",
+                                        "deviceType",
+                                        "created",
+                                        "customerId"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http:/ubirch-web-ui/api/v1"
+                    }
+                ]
+            },
+            "put": {
+                "operationId": "updateDevice",
+                "summary": "Update a device.",
+                "description": "Update a device. The specified device will see all its attributes replaced by the new provided one.",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "hwDeviceId of the device that will be updated",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "apiConfig": {
+                                        "type": "string"
+                                    },
+                                    "deviceType": {
+                                        "type": "string"
+                                    },
+                                    "ownerId": {
+                                        "type": "string"
+                                    },
+                                    "deviceConfig": {
+                                        "type": "string"
+                                    },
+                                    "hwDeviceId": {
+                                        "type": "string"
+                                    },
+                                    "groupList": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "hwDeviceId",
+                                    "ownerId",
+                                    "apiConfig",
+                                    "deviceConfig",
+                                    "description",
+                                    "deviceType",
+                                    "groupList"
+                                ]
+                            }
+                        }
+                    },
+                    "description": "Json of the device",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "deleteOneDevice",
+                "summary": "Delete a single device",
+                "description": "Delete one device belonging to a user from his hwDeviceId",
+                "tags": [
+                    "Devices"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "hwDeviceId of the device that will be deleted",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/": {
+            "get": {
+                "operationId": "getAllGroupOfUser",
+                "summary": "Get all the groups of a user",
+                "description": "see summary",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}": {
+            "delete": {
+                "operationId": "deleteGroup",
+                "summary": "Delete a group.",
+                "description": "Delete a group that the user controls.",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupId",
+                        "description": "Id of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}/addDevice": {
+            "put": {
+                "operationId": "addDeviceIntoGroup",
+                "summary": "Add a device into a group",
+                "description": "Add a device into a group. Can only be done if the user is the owner of the device",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupId",
+                        "description": "Id of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hwDeviceIds",
+                        "description": "HwDeviceIds of the device to be added on the group",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}/devices": {
+            "get": {
+                "operationId": "getAllDevicesFromGroup",
+                "summary": "Get all the devices of a group",
+                "description": "see summary",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupId",
+                        "description": "Id of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "hwDeviceId": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "deviceType": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "hwDeviceId",
+                                            "description",
+                                            "deviceType"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}/isEmpty": {
+            "get": {
+                "operationId": "isGroupEmpty",
+                "summary": "Check if a group is empty.",
+                "description": "Check if a group is empty.",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupId",
+                        "description": "Id of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}/leave": {
+            "post": {
+                "operationId": "leaveGroup",
+                "summary": "Make a user leave a group.",
+                "description": "Make a user leave a group.",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupId",
+                        "description": "Id of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupId}/users/": {
+            "get": {
+                "operationId": "getAllUsersFromGroup",
+                "summary": "Get all the users of a group",
+                "description": "see summary",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupId",
+                        "description": "Id of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "username": {
+                                                "type": "string"
+                                            },
+                                            "lastname": {
+                                                "type": "string"
+                                            },
+                                            "firstname": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "username",
+                                            "lastname",
+                                            "firstname"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{groupName}": {
+            "post": {
+                "operationId": "createGroup",
+                "summary": "Create a group and add the user in it",
+                "description": "see summary",
+                "tags": [
+                    "Groups"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "groupName",
+                        "description": "Name of the group",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/": {
+            "get": {
+                "operationId": "getUserFromToken",
+                "summary": "Get a user from its Token",
+                "description": "see summary",
+                "tags": [
+                    "Users"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "username": {
+                                            "type": "string"
+                                        },
+                                        "lastname": {
+                                            "type": "string"
+                                        },
+                                        "firstname": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "username",
+                                        "lastname",
+                                        "firstname"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/accountInfo": {
+            "get": {
+                "operationId": "getAccountInfo",
+                "summary": "Get a user's basic info",
+                "description": "Get a user's basic info: number of devices and last login",
+                "tags": [
+                    "Users"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Token of the user. ADD \"bearer \" followed by a space) BEFORE THE TOKEN OTHERWISE IT WON'T WORK",
+                        "required": true,
+                        "in": "header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "lastname": {
+                                                    "type": "string"
+                                                },
+                                                "firstname": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "id",
+                                                "username",
+                                                "lastname",
+                                                "firstname"
+                                            ]
+                                        },
+                                        "numberOfDevices": {
+                                            "type": "integer",
+                                            "format": "int32"
+                                        }
+                                    },
+                                    "required": [
+                                        "user",
+                                        "numberOfDevices"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/getUserFromUsername/{realmName}": {
+            "get": {
+                "operationId": "getUserFromUsername",
+                "summary": "Get a user from its username and realm",
+                "description": "see summary",
+                "tags": [
+                    "Users"
+                ],
+                "deprecated": false,
+                "parameters": [
+                    {
+                        "name": "username",
+                        "description": "Username of the user",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "realmName",
+                        "description": "Name of the realm where the user is",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "username": {
+                                            "type": "string"
+                                        },
+                                        "lastname": {
+                                            "type": "string"
+                                        },
+                                        "firstname": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id",
+                                        "username",
+                                        "lastname",
+                                        "firstname"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/ubirch-web-ui/api/v1"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "DeviceFE": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "deviceType": {
+                        "type": "string"
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "name"
+                            ]
+                        }
+                    },
+                    "attributes": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "customerId": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "owner": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "lastname": {
+                                "type": "string"
+                            },
+                            "firstname": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "username",
+                            "lastname",
+                            "firstname"
+                        ]
+                    },
+                    "created": {
+                        "type": "string"
+                    },
+                    "hwDeviceId": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "hwDeviceId",
+                    "description",
+                    "owner",
+                    "groups",
+                    "attributes",
+                    "deviceType",
+                    "created",
+                    "customerId"
+                ]
+            },
+            "SimpleUser": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "firstname": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "username",
+                    "lastname",
+                    "firstname"
+                ]
+            },
+            "AddDevice": {
+                "type": "object",
+                "properties": {
+                    "hwDeviceId": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "deviceType": {
+                        "type": "string"
+                    },
+                    "listGroups": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "hwDeviceId",
+                    "description",
+                    "deviceType",
+                    "listGroups"
+                ]
+            },
+            "GroupFE": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name"
+                ]
+            },
+            "DeviceStub": {
+                "type": "object",
+                "properties": {
+                    "hwDeviceId": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "deviceType": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "hwDeviceId",
+                    "description",
+                    "deviceType"
+                ]
+            },
+            "UpdateDevice": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "apiConfig": {
+                        "type": "string"
+                    },
+                    "deviceType": {
+                        "type": "string"
+                    },
+                    "ownerId": {
+                        "type": "string"
+                    },
+                    "deviceConfig": {
+                        "type": "string"
+                    },
+                    "hwDeviceId": {
+                        "type": "string"
+                    },
+                    "groupList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "hwDeviceId",
+                    "ownerId",
+                    "apiConfig",
+                    "deviceConfig",
+                    "description",
+                    "deviceType",
+                    "groupList"
+                ]
+            },
+            "UserAccountInfo": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "username": {
+                                "type": "string"
+                            },
+                            "lastname": {
+                                "type": "string"
+                            },
+                            "firstname": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "username",
+                            "lastname",
+                            "firstname"
+                        ]
+                    },
+                    "numberOfDevices": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "required": [
+                    "user",
+                    "numberOfDevices"
+                ]
+            }
+        }
+    }
+}

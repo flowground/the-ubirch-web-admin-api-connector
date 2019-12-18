@@ -1,0 +1,51 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "id": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "apiConfig": {
+                    "type": "string"
+                },
+                "deviceType": {
+                    "type": "string"
+                },
+                "ownerId": {
+                    "type": "string"
+                },
+                "deviceConfig": {
+                    "type": "string"
+                },
+                "hwDeviceId": {
+                    "type": "string"
+                },
+                "groupList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "hwDeviceId",
+                "ownerId",
+                "apiConfig",
+                "deviceConfig",
+                "description",
+                "deviceType",
+                "groupList"
+            ]
+        }
+    }
+}

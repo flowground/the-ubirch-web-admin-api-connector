@@ -1,0 +1,391 @@
+{
+    "title": "The Ubirch web admin API",
+    "description": "Docs for the Ubirch web admin API",
+    "docsUrl": "",
+    "url": "/ubirch-web-ui/api/v1",
+    "envVars": {},
+    "credentials": {
+        "fields": {
+            "server": {
+                "label": "Server",
+                "viewClass": "SelectView",
+                "model": [
+                    "/ubirch-web-ui/api/v1",
+                    "--- Custom URL"
+                ],
+                "required": true
+            },
+            "otherServer": {
+                "label": "Custom Server URL",
+                "viewClass": "TextFieldView"
+            }
+        }
+    },
+    "triggers": {
+        "startFlow": {
+            "main": "./lib/triggers/startFlow.js",
+            "type": "polling",
+            "title": "Start Flow",
+            "fields": {}
+        }
+    },
+    "actions": {
+        "check": {
+            "main": "./lib/actions/check.js",
+            "title": "Simple check.",
+            "description": "Simple check to see if the service is up",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/check.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "Authenticate": {
+            "main": "./lib/actions/Authenticate.js",
+            "title": "Authenticate",
+            "description": "Authenticate a device against Ubirch device management system. Returns a token if valid, HTTP error code 401 if not",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/Authenticate.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getDeviceInfo": {
+            "main": "./lib/actions/getDeviceInfo.js",
+            "title": "Get the info of a device",
+            "description": "Get general information about a device.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getDeviceInfo.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "addBulkDevices": {
+            "main": "./lib/actions/addBulkDevices.js",
+            "title": "Add multiple devices.",
+            "description": "Add multiple devices.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/addBulkDevices.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAllDevicesFromUser": {
+            "main": "./lib/actions/getAllDevicesFromUser.js",
+            "title": "List all the devices of one user",
+            "description": "For the moment does not support pagination",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAllDevicesFromUser.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "searchForDevices": {
+            "main": "./lib/actions/searchForDevices.js",
+            "title": "Search for devices matching a specific attribute",
+            "description": "Search for devices matching a specific attribute: description, hwDeviceId, ...",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/searchForDevices.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getBulkUppsOfDevice": {
+            "main": "./lib/actions/getBulkUppsOfDevice.js",
+            "title": "Number of UPPs that the specified devices created during the specified timeframe",
+            "description": "Number of UPPs that the specified devices created during the specified timeframe",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getBulkUppsOfDevice.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getOneDevice": {
+            "main": "./lib/actions/getOneDevice.js",
+            "title": "Get one device",
+            "description": "Get one device belonging to a user from his hwDeviceId",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getOneDevice.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "updateDevice": {
+            "main": "./lib/actions/updateDevice.js",
+            "title": "Update a device.",
+            "description": "Update a device. The specified device will see all its attributes replaced by the new provided one.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/updateDevice.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "deleteOneDevice": {
+            "main": "./lib/actions/deleteOneDevice.js",
+            "title": "Delete a single device",
+            "description": "Delete one device belonging to a user from his hwDeviceId",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/deleteOneDevice.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAllGroupOfUser": {
+            "main": "./lib/actions/getAllGroupOfUser.js",
+            "title": "Get all the groups of a user",
+            "description": "see summary",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAllGroupOfUser.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "deleteGroup": {
+            "main": "./lib/actions/deleteGroup.js",
+            "title": "Delete a group.",
+            "description": "Delete a group that the user controls.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/deleteGroup.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "addDeviceIntoGroup": {
+            "main": "./lib/actions/addDeviceIntoGroup.js",
+            "title": "Add a device into a group",
+            "description": "Add a device into a group. Can only be done if the user is the owner of the device",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/addDeviceIntoGroup.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAllDevicesFromGroup": {
+            "main": "./lib/actions/getAllDevicesFromGroup.js",
+            "title": "Get all the devices of a group",
+            "description": "see summary",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAllDevicesFromGroup.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "isGroupEmpty": {
+            "main": "./lib/actions/isGroupEmpty.js",
+            "title": "Check if a group is empty.",
+            "description": "Check if a group is empty.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/isGroupEmpty.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "leaveGroup": {
+            "main": "./lib/actions/leaveGroup.js",
+            "title": "Make a user leave a group.",
+            "description": "Make a user leave a group.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/leaveGroup.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAllUsersFromGroup": {
+            "main": "./lib/actions/getAllUsersFromGroup.js",
+            "title": "Get all the users of a group",
+            "description": "see summary",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAllUsersFromGroup.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "createGroup": {
+            "main": "./lib/actions/createGroup.js",
+            "title": "Create a group and add the user in it",
+            "description": "see summary",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/createGroup.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getUserFromToken": {
+            "main": "./lib/actions/getUserFromToken.js",
+            "title": "Get a user from its Token",
+            "description": "see summary",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getUserFromToken.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getAccountInfo": {
+            "main": "./lib/actions/getAccountInfo.js",
+            "title": "Get a user's basic info",
+            "description": "Get a user's basic info: number of devices and last login",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAccountInfo.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "getUserFromUsername": {
+            "main": "./lib/actions/getUserFromUsername.js",
+            "title": "Get a user from its username and realm",
+            "description": "see summary",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getUserFromUsername.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "from": {
+            "required": true,
+            "type": "string"
+        },
+        "to": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "type": "string"
+        }
+    }
+}

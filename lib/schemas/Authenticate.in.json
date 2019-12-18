@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": {
+        "X_Ubirch_Hardware_Id": {
+            "required": true,
+            "type": "string"
+        },
+        "X_Ubirch_Credential": {
+            "required": true,
+            "type": "string"
+        }
+    }
+}
